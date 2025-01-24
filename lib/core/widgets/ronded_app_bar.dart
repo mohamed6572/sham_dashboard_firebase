@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sham/admin/add_post_screen.dart';
 import 'package:sham/core/consttant/const.dart';
 
+import '../../admin/cubit/post_cubit.dart';
+
 AppBar buildAppBar(BuildContext context,
-    {required String title, bool showBackButton = false,bool IFcreate = false}) {
+    {required String title, bool showBackButton = false,bool IFcreate = false,bool IfRefresh = false}) {
   return AppBar(
     centerTitle: true,
     backgroundColor: primaryColor,
@@ -15,13 +17,18 @@ AppBar buildAppBar(BuildContext context,
           Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePostScreen()));
         },
       ),
+      if(IfRefresh)
+        IconButton(
+          icon: Icon(Icons.refresh,color: Colors.white,),
+          onPressed: () {
+            PostCubit.get(context).fetchHomeSliderData();
+          },
+        ),
+
     ],
     leading: showBackButton
-        ? IconButton(
-            icon: Icon(Icons.arrow_back,color: Colors.white,),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        ? BackButton(
+            color: Colors.white,
           )
         : null,
     title: Text(title,style: TextStyle(

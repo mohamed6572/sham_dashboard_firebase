@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sham/admin/cubit/post_state.dart';
 import 'package:sham/core/consttant/const.dart';
 import 'package:sham/core/models/post_model.dart';
+import 'package:sham/core/models/ad_pop_up_model.dart';
 import 'package:sham/core/services/storage_service.dart';
 
 import '../../core/services/firestore_service.dart';
@@ -181,6 +182,149 @@ print('createPost 4');
       emit(UpdatePostFailure('Error updating post: $e'));
     }
   }
+
+
+  List<AdHomeSliderModel> homeAds = [];
+  Future<void> fetchHomeSliderData() async {
+    emit(GetSliderLoading());
+    try {
+      var data = await firestoreService.getAllDocuments(
+        collectionPath: 'adHome',
+      );
+
+      if (data != null) {
+        homeAds = data.map((e) {
+          final id = e['id'] as String? ?? '';
+          return AdHomeSliderModel.fromJson(e, id);
+        }).toList();
+      }
+
+      emit(GetSliderSuccess());
+    } catch (e) {
+      emit(GetSliderFailure(e.toString()));
+    }
+  }
+
+  /// Upload a new slider and save its document ID
+  Future<void> uploadSlider({
+    required String imagePath,
+    required String link,
+    String text = '',
+  }) async {
+    emit(UploadSliderLoading());
+    try {
+      // Upload image to storage
+      final uploadedImageUrl = await uploadImage(imagePath);
+      if (uploadedImageUrl == null) {
+        emit(UploadSliderFailure('Failed to upload image.'));
+        return;
+      }
+
+      // Create slider data
+      var data = {
+        "imageUrl": uploadedImageUrl,
+        "text": text,
+        "link": link,
+      };
+
+      // Add document to Firestore
+      final sliderId = await firestoreService.addDocument(
+        collectionPath: 'adHome',
+        data: data,
+      );
+
+      if (sliderId != null) {
+        // Update the document with its ID
+        await firestoreService.updateDocument(
+          collectionPath: 'adHome',
+          documentId: sliderId,
+          data: {'id': sliderId},
+        );
+        emit(UploadSliderSuccess());
+      } else {
+        emit(UploadSliderFailure('Failed to add slider to Firestore.'));
+      }
+    } catch (e) {
+      emit(UploadSliderFailure('Error uploading slider: $e'));
+    }
+  }
+
+  /// Update an existing slider
+  Future<void> updateSlider({
+    required String sliderId,
+    required String link,
+    required String text,
+    required String currentImageUrl,
+    required String collectionPath,
+    bool isNewImage = false,
+    String? newImagePath,
+  }) async {
+    emit(UpdatePostLoading());
+    try {
+      String imageUrl = currentImageUrl;
+
+      // If a new image is provided, upload it
+      if (isNewImage && newImagePath != null) {
+        // Delete the old image from storage
+        await storageService.deleteFile(currentImageUrl);
+
+        // Upload the new image
+        final uploadedImageUrl = await uploadImage(newImagePath);
+        if (uploadedImageUrl == null) {
+          emit(UpdatePostFailure('Failed to upload new image.'));
+          return;
+        }
+        imageUrl = uploadedImageUrl;
+      }
+
+      // Update slider data
+      final updatedData = {
+        'link': link,
+        'text': text,
+        'imageUrl': imageUrl,
+      };
+
+      final success = await firestoreService.updateDocument(
+        collectionPath: collectionPath,
+        documentId: sliderId,
+        data: updatedData,
+      );
+
+      if (success) {
+        emit(UpdatePostSuccess());
+      } else {
+        emit(UpdatePostFailure('Failed to update slider.'));
+      }
+    } catch (e) {
+      emit(UpdatePostFailure('Error updating slider: $e'));
+    }
+  }
+
+  /// Delete a slider and its image
+  Future<void> deleteSlider({
+    required String sliderId,
+    required String imageUrl,
+  }) async {
+    emit(DeleteSliderLoading());
+    try {
+      // Delete the Firestore document
+      final success = await firestoreService.deleteDocument(
+        collectionPath: 'adHome',
+        documentId: sliderId,
+      );
+
+      if (success) {
+        // Delete the image from storage
+        await storageService.deleteFile(imageUrl);
+        emit(DeleteSliderSuccess());
+      } else {
+        emit(DeleteSliderFailure('Failed to delete slider document.'));
+      }
+    } catch (e) {
+      emit(DeleteSliderFailure('Error deleting slider: $e'));
+    }
+  }
+
 }
 
  //"package_name": "com.sham.sahamapp"

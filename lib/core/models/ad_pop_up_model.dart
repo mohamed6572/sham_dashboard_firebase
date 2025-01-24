@@ -37,3 +37,35 @@ class AdPopUpModel{
     };
   }
 }
+
+
+class AdHomeSliderModel {
+  String? id; // Add document ID to the model
+  final String imageUrl;
+  final String text;
+  final String link;
+
+  AdHomeSliderModel({
+    this.id,
+    required this.imageUrl,
+    required this.text,
+    required this.link,
+  });
+
+  factory AdHomeSliderModel.fromJson(Map<String, dynamic> json, String id) {
+    return AdHomeSliderModel(
+      id: id,
+      imageUrl: json['imageUrl'],
+      text: json['text'],
+      link: json['link'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'imageUrl': imageUrl,
+      'text': text,
+      'link': link,
+    };
+  }
+}
