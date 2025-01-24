@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "882654272400",
+    "project_id": "kawader-fe347",
+    "storage_bucket": "kawader-fe347.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882654272400:android:bf46ba2eac4118f110f115",
+        "android_client_info": {
+          "package_name": "com.sham.sahamdashapp"
+
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882654272400-7rvstjof346npmqdk6ed94uf139se84s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNyaSXwOw6xbk0HKmBvnsMxsRahuIgdZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882654272400-7rvstjof346npmqdk6ed94uf139se84s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
