@@ -42,3 +42,39 @@ class UpdatePostFailure extends PostState {
 
   UpdatePostFailure(this.error);
 }
+class UpdateSliderLoading extends PostState {}
+
+class UpdateSliderSuccess extends PostState {}
+
+class UpdateSliderFailure extends PostState {
+  final String error;
+
+  UpdateSliderFailure(this.error);
+}
+class UploadSliderLoading extends PostState {}
+
+class UploadSliderSuccess extends PostState {}
+
+class UploadSliderFailure extends PostState {
+  final String error;
+
+  UploadSliderFailure(this.error);
+}
+class DeleteSliderLoading extends PostState {}
+
+class DeleteSliderSuccess extends PostState {}
+
+class DeleteSliderFailure extends PostState {
+  final String error;
+
+  DeleteSliderFailure(this.error);
+}
+class GetSliderLoading extends PostState {}
+
+class GetSliderSuccess extends PostState {}
+
+class GetSliderFailure extends PostState {
+  final String error;
+
+  GetSliderFailure(this.error);
+}
