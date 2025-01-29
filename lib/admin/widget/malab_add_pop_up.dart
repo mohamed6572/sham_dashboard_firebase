@@ -151,7 +151,7 @@ class _MalabAddPopUpState extends State<MalabAddPopUp> {
 
                             if (cubit.adMalabPopUpData == null) {
                               // Create
-                              cubit.uploadAdPopUp(
+                              cubit.uploadMalabAdPopUp(
                                 text: textController.text,
                                 link: linkController.text,
                                 imagePath: newImagePath,
